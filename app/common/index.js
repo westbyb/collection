@@ -10,6 +10,7 @@ import store from '../store.js';
 import Tabs from 'react-native-tabs';
 
 import Collection from './routes/Collection/Collection.js';
+import Scanner from './routes/Scanner/Scanner.js';
 import Settings from './routes/Settings/Settings.js';
 
 class Index extends React.Component {
@@ -39,7 +40,7 @@ class Index extends React.Component {
             style={{backgroundColor:'white'}}
           >
             <Text name="view" comp={<Collection/>}>View</Text>
-            <Text name="capture">Capture</Text>
+            <Text name="capture" comp={<Scanner/>}>Capture</Text>
             <Text name="settings" comp={<Settings/>}>Settings</Text>
           </Tabs>
           <View style={styles.container}>

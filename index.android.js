@@ -11,6 +11,8 @@ import {
   Text,
   View
 } from 'react-native';
+// delete GLOBAL.XMLHttpRequest;
+GLOBAL.XMLHttpRequest = GLOBAL.originalXMLHttpRequest || GLOBAL.XMLHttpRequest
 
 import index from './app/common/index.js';
 
