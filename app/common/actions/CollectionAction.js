@@ -3,7 +3,10 @@ import * as types from '../constants/CollectionConstants.js';
 const gbAPIURL = 'https://www.giantbomb.com/api/';
 const apiKey = 'api_key=91edbeb1e5fe398ad611bf575dc8ce4642e8bedb';
 
-function generateGBURL(resource, params) {
+const amznUrl = 'http://webservices.amazon.com/onca/xml?Service=AWSECommerceService&Operation=ItemLookup&SubscriptionId=AKIAJ2234TP6EXITQZ4A&AssociateTag=westbyb-20&IdType=UPC&ResponseGroup=Images,ItemAttributes&SearchIndex=VideoGames';
+// http://webservices.amazon.com/onca/xml?Service=AWSECommerceService&Operation=ItemLookup&SubscriptionId=AKIAJ2234TP6EXITQZ4A&AssociateTag=westbyb-20&ItemId=047875879683&IdType=UPC&ResponseGroup=Images,ItemAttributes&SearchIndex=VideoGames
+
+function createSignature(reqObj) {
 
 }
 
@@ -15,7 +18,6 @@ export function fetchCollection() {
     fetch(url)
     .then(response => {
       if (response.ok && response.status === 200) {
-        // return response.blob();
         return response.json();
       }
     })
@@ -44,12 +46,31 @@ function fetchCollectionFailure() {
 export function fetchByUPC(upc) {
   return function(dispatch) {
     dispatch({type: types.FETCH_BY_UPC})
-    fetch(gbAPIURL + 'release/', {
-      body: {
-        api_key: '91edbeb1e5fe398ad611bf575dc8ce4642e8bedb',
-        format: 'json',
 
+    let timestamp = new Date.toISOString();
+    let reqBody = {
+      AWSAccessKeyId: 'AKIAJ2234TP6EXITQZ4A',
+      AssociateTag: 'westbyb-20',
+      IdType: 'UPC',
+      ItemId: upc,
+      Operation: 'ItemLookup',
+      ResponseGroup: 'Images,ItemAttributes',
+      SearchIndex: 'VideoGames',
+      Service: 'AWSECommerceService',
+      Timestamp: timestamp
+    };
+    let signature = createSignature(reqBody);
+
+    fetch(amznUrl + '&ItemId=' + upc, {
+      body:
+    })
+    .then(response => {
+      if (response.ok && response.status === 200) {
+        return response.json();
       }
+    })
+    .then(response => {
+      debugger;
     })
   }
 }

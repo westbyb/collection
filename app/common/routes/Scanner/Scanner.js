@@ -6,9 +6,16 @@ import {
   View
 } from 'react-native';
 
+import {fetchByUPC} from '../../actions/CollectionAction.js';
+
+@connect()
 class Scanner extends React.Component {
   submitGame(e) {
     alert(this.code)
+  }
+
+  sendUPC(e) {
+    this.props.dispatch(fetchByUPC(this.code));
   }
 
   render() {
@@ -19,7 +26,7 @@ class Scanner extends React.Component {
         />
         <Button
           title="Submit"
-          onPress={this.submitGame.bind(this)}
+          onPress={this.sendUPC.bind(this)}
         />
       </View>
     )
