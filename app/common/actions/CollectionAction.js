@@ -3,11 +3,20 @@ import * as types from '../constants/CollectionConstants.js';
 const gbAPIURL = 'https://www.giantbomb.com/api/';
 const apiKey = 'api_key=91edbeb1e5fe398ad611bf575dc8ce4642e8bedb';
 
-const amznUrl = 'http://webservices.amazon.com/onca/xml?Service=AWSECommerceService&Operation=ItemLookup&SubscriptionId=AKIAJ2234TP6EXITQZ4A&AssociateTag=westbyb-20&IdType=UPC&ResponseGroup=Images,ItemAttributes&SearchIndex=VideoGames';
+const amznUrl = 'http://webservices.amazon.com/onca/xml';
 // http://webservices.amazon.com/onca/xml?Service=AWSECommerceService&Operation=ItemLookup&SubscriptionId=AKIAJ2234TP6EXITQZ4A&AssociateTag=westbyb-20&ItemId=047875879683&IdType=UPC&ResponseGroup=Images,ItemAttributes&SearchIndex=VideoGames
 
 function createSignature(reqObj) {
+  // http://docs.aws.amazon.com/AWSECommerceService/latest/DG/rest-signature.html
+  let signature = 'GET\nwebservices.amazon.com\n/onca/xml\n';
+  let objArr = _.toPairs(reqObj);
+  // let objArr = _.map(reqObj, _.pairs);
+  let objStr = _.reduce(objArr, (memo, items) => {
+    if (memo === '') return memo + items[0] + '=' + encodeURIComponent(items[1]);
+    return memo + '&' + items[0] + '=' + encodeURIComponent(items[1]);
+  }, '');
 
+  return objStr;
 }
 
 export function fetchCollection() {
@@ -45,11 +54,11 @@ function fetchCollectionFailure() {
 
 export function fetchByUPC(upc) {
   return function(dispatch) {
-    dispatch({type: types.FETCH_BY_UPC})
+    dispatch({type: types.FETCH_BY_UPC});
 
-    let timestamp = new Date.toISOString();
+    let timestamp = new Date().toISOString();
     let reqBody = {
-      AWSAccessKeyId: 'AKIAJ2234TP6EXITQZ4A',
+      AWSAccessKeyId: 'AKIAI2FCKEC2I6DAGOTA',
       AssociateTag: 'westbyb-20',
       IdType: 'UPC',
       ItemId: upc,
@@ -59,10 +68,10 @@ export function fetchByUPC(upc) {
       Service: 'AWSECommerceService',
       Timestamp: timestamp
     };
-    let signature = createSignature(reqBody);
+    reqBody.signature = createSignature(reqBody);
 
-    fetch(amznUrl + '&ItemId=' + upc, {
-      body:
+    fetch(amznUrl, {
+      body: reqBody
     })
     .then(response => {
       if (response.ok && response.status === 200) {
@@ -70,6 +79,9 @@ export function fetchByUPC(upc) {
       }
     })
     .then(response => {
+      debugger;
+    })
+    .catch(error => {
       debugger;
     })
   }

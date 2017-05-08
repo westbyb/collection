@@ -13,7 +13,7 @@ import {fetchCollection} from '../../actions/CollectionAction.js';
 })
 class Collection extends React.Component {
   componentWillMount() {
-    this.props.dispatch(fetchCollection());
+    // this.props.dispatch(fetchCollection());
   }
 
   render() {
